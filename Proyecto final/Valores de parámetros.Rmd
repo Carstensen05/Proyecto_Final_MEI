@@ -1,0 +1,204 @@
+---
+title: "Valores de parámetros"
+author: "Max, Rebeca, Perla y Ximena"
+date: "2023-11-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+Para la obtención de los valores de parámetros del modelo, se tomará en cuenta el tiempo en días. Posteriormente, se ajustarán de acuerdo a la intensidad de interacción (1-5) entre individuos, descritas a continuación: 
+
+```{r}
+Fuerza_int <- read.csv ("Fuerza_interacciones.csv", header = FALSE, sep = ",")
+Fuerza_int
+```
+Entonces, se asigarán los parámetros iniciales, obtenidos de la literatura: 
+
+```{r}
+VF <- 1 / (25 * 365)
+VM <- 1 / (20 * 365)
+GAF <- 1 / (365 * 13)
+GAM <- 1 / (365 * 13)
+GJF <- 1 / (365 * 1.5)
+GJM <- 1 / (365 * 1.5)
+Beta <- 1 / ((11 + 17) / 2)
+Gamma <- 1 / ((120 + 96 + 30) / 3)
+Delta <- 1 / 30
+MuA <- 1 / (365 * (90-45))
+MuJ <- 1 / (365 * (90-8))
+MuC <- 1 / (365 * (90-1.5)) 
+
+```
+Para los parámetros a utilizar en el modelo, se ajustarán de acuerdo a la intensidad de interacción y del estado en del que se trate: 
+
+```{r}
+NuF <- VF
+NuM <- VM
+GAFS <- GAF * 1
+GAFI <- GAF * 0.3 
+GAFR <- GAF * 0.6
+GAMS <- GAM * 1
+GAMI <- GAM * 0.3
+GAMR <- GAM * 0.6
+GJFS <- GJF * 1
+GJFI <- GJF * 0.3
+GJFR <- GJF * 0.6
+GJMS <- GJM * 1
+GJMI <- GJM * 0.3
+GJMR <- GJM * 0.6
+BetaAFAF <- Beta * 1 
+BetaAFAM <- Beta * 0.6
+BetaAFJF <- Beta * 1 
+BetaAFJM <- Beta * 0.8 
+BetaAFCF <- Beta * 0.8
+BetaAFCM <- Beta * 0.8 
+BetaAMAF <- Beta * 0.6
+BetaAMAM <- Beta * 0.8
+BetaAMJF <- Beta * 0.4
+BetaAMCF <- Beta * 0.4
+BetaAMJM <- Beta * 0.4
+BetaAMCM <- Beta * 0.4
+BetaJFAF <- Beta * 1
+BetaJFAM <- Beta * 0.4
+BetaJFJF <- Beta * 1
+BetaJFJM <- Beta * 0.4
+BetaJFCF <- Beta * 1
+BetaJFCM <- Beta * 1
+BetaJMAF <- Beta * 0.8
+BetaJMAM <- Beta * 0.4
+BetaJMJF <- Beta * 0.4
+BetaJMJM <- Beta * 0.8
+BetaJMCF <- Beta * 0.6
+BetaJMCM <- Beta * 0.6
+BetaCFAF <- Beta * 0.8
+BetaCFAM <- Beta * 0.4
+BetaCFJF <- Beta * 1
+BetaCFJM <- Beta * 0.6
+BetaCFCF <- Beta * 1
+BetaCFCM <- Beta * 1
+BetaCMAF <- Beta * 0.8
+BetaCMAM <- Beta * 0.4
+BetaCMJF <- Beta * 1
+BetaCMJM <- Beta * 0.6
+BetaCMCF <- Beta * 1
+BetaCMCM <- Beta * 1
+GammaAF <- Gamma * 0.8
+GammaAM <- Gamma * 0.7
+GammaJF <- Gamma * 1
+GammaJM <- Gamma * 1 
+GammaCF <- Gamma * 0.8
+GammaCM <- Gamma * 0.8
+DeltaAF <- Delta * 0.6
+DeltaAM <- Delta * 0.8
+DeltaJF <- Delta * 0.3
+DeltaJM <- Delta * 0.3
+DeltaCF <- Delta * 0.6
+DeltaCM <- Delta * 0.6
+MuAFS <- MuA * 0.3 
+MuAFI <- MuA * 0.6
+MuAFR <- MuA * 0.4
+MuAMS <- MuA * 0.4
+MuAMI <- MuA * 0.8
+MuAMR <- MuA * 0.6
+MuJFS <- MuJ * 0.15 
+MuJFI <- MuJ * 0.3
+MuJFR <- MuJ * 0.27
+MuJMS <- MuJ * 0.15
+MuJMI <- MuJ * 0.3
+MuJMR <- MuJ * 0.27
+MuCFS <- MuC * 0.3
+MuCFI <- MuC * 0.6
+MuCFR <- MuC * 0.4
+MuCMS <- MuC * 0.3
+MuCMI <- MuC * 0.6
+MuCMR <- MuC * 0.4
+
+```
+Por lo tanto, los valores de los parámetros son: 
+
+```{r}
+NuF
+NuM
+GAFS 
+GAFI 
+GAFR 
+GAMS 
+GAMI 
+GAMR 
+GJFS 
+GJFI 
+GJFR 
+GJMS 
+GJMI 
+GJMR 
+BetaAFAF 
+BetaAFAM 
+BetaAFJF
+BetaAFJM  
+BetaAFCF 
+BetaAFCM 
+BetaAMAF 
+BetaAMAM 
+BetaAMJF 
+BetaAMCF 
+BetaAMJM 
+BetaAMCM  
+BetaJFAF 
+BetaJFAM 
+BetaJFJF 
+BetaJFJM  
+BetaJFCF 
+BetaJFCM 
+BetaJMAF  
+BetaJMAM  
+BetaJMJF 
+BetaJMJM 
+BetaJMCF  
+BetaJMCM  
+BetaCFAF  
+BetaCFAM  
+BetaCFJF 
+BetaCFJM 
+BetaCFCF 
+BetaCFCM 
+BetaCMAF 
+BetaCMAM 
+BetaCMJF 
+BetaCMJM  
+BetaCMCF 
+BetaCMCM 
+GammaAF  
+GammaAM  
+GammaJF 
+GammaJM 
+GammaCF  
+GammaCM 
+DeltaAF 
+DeltaAM  
+DeltaJF 
+DeltaJM 
+DeltaCF 
+DeltaCM 
+MuAFS  
+MuAFI  
+MuAFR 
+MuAMS 
+MuAMI  
+MuAMR 
+MuJFS 
+MuJFI 
+MuJFR 
+MuJMS 
+MuJMI 
+MuJMR  
+MuCFS 
+MuCFI  
+MuCFR 
+MuCMS 
+MuCMI 
+MuCMR 
+
+```
+

@@ -1,0 +1,139 @@
+---
+title: "Ecuaciones y parámetros"
+author: "Max, Rebeca, Perla y Ximena"
+date: "2023-11-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Ecuaciones del modelo
+
+Las siguientes ecuaciones describen el modelo SIRS propuesto.
+
+1.  $$\dot S_{AF}= G_{AFS} S_{JF} - \beta_{AFAF} S_{AF} I_{AF} - \beta_{AFAM} S_{AF} I_{AM} - \beta_{AFJF} S_{AF} I_{JF} - \beta_{AFJM} S_{AF} I_{JM} $$ $$ - \beta_{AFCF} S_{AF} I_{CF} - \beta_{AFCM} S_{AF} I_{CM} + \delta_{AF} R_{AF} - \mu_{AFS} S_{AF}  $$
+
+2.  $$\dot I_{AF} = G_{AFI} I_{JF} + \beta_{AFAF} S_{AF} I_{AF} + \beta_{AFAM} S_{AF} I_{AM} + \beta_{AFJF} S_{AF} I_{JF} + \beta_{AFJM} S_{AF} I_{JM} $$ $$ +  \beta_{AFCF} S_{AF} I_{CF} + \beta_{AFCM} S_{AF} I_{CM}  - \gamma_{AF} I_{AF} - \mu_{AFI} I_{AF} $$
+
+3.  $$\dot R_{AF} = G_{AFR} R_{JF} + \gamma_{AF} I_{AF} - \delta_{AF} R_{AF} - \mu_{AFR} R_{AF} $$
+
+4.  $$\dot S_{AM} = G_{AMS} S_{JM} - \beta_{AMAF} S_{AM} I_{AF} - \beta_{AMAM} S_{AM} I_{AM} - \beta_{AMJF} S_{AM} I_{JF} - \beta_{AMJM} S_{AM} I_{JM} $$ $$ - \beta_{AMCF} S_{AM} I_{CF} - \beta_{AMCM} S_{AM} I_{CM} + \delta_{AM} R_{AM} - \mu_{AMS} S_{AM} $$
+
+5.  $$\dot I_{AM} = G_{AMI} I_{JM} + \beta_{AMAF} S_{AM} I_{AF} + \beta_{AMAM} S_{AM} I_{AM} + \beta_{AMJF} S_{AM} I_{JF} + \beta_{AMJM} S_{AM} I_{JM} $$ $$ + \beta_{AMCF} S_{AM} I_{CF} + \beta_{AMCM} S_{AM} I_{CM} - \gamma_{AM} I_{AM} - \mu_{AMI} I_{AM} $$
+
+6.  $$\dot R_{AM} = G_{AMR} R_{JM} + \gamma_{AM} I_{AM} - \delta_{AM} R_{AM} - \mu_{AMR} R_{AM} $$
+
+7.  $$\dot S_{JF} = G_{JFS} S_{CF} - G_{AFS} S_{JF} - \beta_{JFAF} S_{JF} I_{AF} - \beta_{JFAM} S_{JF} I_{AM} - \beta_{JFJF} S_{JF} I_{JF} - \beta_{JFJM} S_{JF} I_{JM} $$ $$ - \beta_{JFCF} S_{JF} I_{CF} - \beta_{JFCM} S_{JF} I_{CM} + \delta_{JF} R_{JF} - \mu_{JFS} S_{JF} $$
+
+8.  $$\dot I_{JF} = G_{JFI} I_{CF} - G_{AFI} I_{JF} + \beta_{JFAF} S_{JF} I_{AF} + \beta_{JFAM} S_{JF} I_{AM} + \beta_{JFJF} S_{JF} I_{JF} + \beta_{JFJM} S_{JF} I_{JM} $$
+
+$$ + \beta_{JFCF} S_{JF} I_{CF} + \beta_{JFCM} S_{JF} I_{CM} - \gamma_{JF} I_{JF} - \mu_{JFI} I_{JF} $$
+
+9.  $$\dot R_{JF} = G_{JFR} R_{CF} - G_{AFR} R_{JF} + \gamma_{JF} I_{JF} - \delta_{JF} R_{JF} - \mu_{JFR} I_{JF} $$
+
+10. $$\dot S_{JM} = G_{JMS} S_{CM} - G_{AMS} S_{JM} - \beta_{JMAF} S_{JM} I_{AF} - \beta_{JMAM} S_{JM} I_{AM} - \beta_{JMJF} S_{JM} I_{JF} - \beta_{JMJM} S_{JM} I_{JM} $$
+
+$$ - \beta_{JMCF} S_{JM} I_{CF} - \beta_{JMCM} S_{JM} I_{CM} + \delta_{JM} R_{JM} - \mu_{JMS} S_{JM} $$
+
+11. $$\dot I_{JM} = G_{JMI} S_{CM} - G_{AMI} I_{JM} + \beta_{JMAF} S_{JM} I_{AF} + \beta_{JMAM} S_{JM} I_{AM} + \beta_{JMJF} S_{JM} I_{JF} + \beta_{JMJM} S_{JM} I_{JM} $$ $$ + \beta_{JMCF} S_{JM} I_{CF} + \beta_{JMCM} S_{JM} I_{CM} - \gamma_{JM} I_{JM} - \delta_{JM} R_{JM} - \mu_{JMR} R_{JM} $$
+
+12. $$\dot R_{JM} = G_{JMR} R_{CM} - G_{AMR} R_{JM} + \gamma_{JM} I_{JM} - \delta_{JM} R_{JM} - \mu_{JMR} R_{JM} $$
+
+13. $$\dot S_{CF} = \nu_{F} - G_{JFS} S_{CF} - \beta_{CFAF} S_{CF} I_{AF} - \beta_{CFAM} S_{CF} I_{AM} - \beta_{CFJF} S_{CF} I_{JF} - \beta_{CFJM} S_{CF} I_{JM} $$ $$ -\beta_{CFCF} S_{CF} I_{CF} - \beta_{CFCM} S_{CF} I_{CM} + \delta_{CF} R_{CF} - \mu_{CFS} S_{CF}  $$
+
+14. $$\dot I_{CF} = - G_{JFI} I_{CF} + \beta_{CFAF} S_{CF} I_{AF} + \beta_{CFAM} S_{CF} I_{AM} + \beta_{CFJF} S_{CF} I_{JF} + \beta_{CFJM} S_{CF} I_{JM} $$ $$ + \beta_{CFCF} S_{CF} I_{CF} - \beta_{CFCM} S_{CF} I_{CM} - \gamma_{CF} I_{CF} - \mu_{CFI} I_{CF} $$
+
+15. $$\dot R_{CF} = -G_{JFR} R_{CF} + \gamma_{CF} I_{CF} - \delta_{CF} R_{CF} - \mu_{CFR} R_{CF}  $$
+
+16. $$\dot S_{CM} = \nu_M - G_{JMS} S_{CM} - \beta_{CMAF} S_{CM} I_{AF} - \beta_{CMAM} S_{CM} I_{AM} - \beta_{CMJF} S_{CM} I_{JF} - \beta_{CMJM} S_{CM} I_{JM} $$ $$ - \beta_{CMCF} S_{CM} I_{CF} - \beta_{CMCM} S_{CM} I_{CM} + \delta_{CM} R_{CM} - \mu_{CMS} S_CM $$
+
+17. $$\dot I_{CM} = - G_{JMI} I_{CM} + \beta_{CMAF} S_{CM} I_{AF} + \beta_{CMAM} S_{CM} I_{AM} + \beta_{CMJF} S_{CM} I_{JF} + \beta_{CMJM} S_{CM} I_{JM} $$
+
+$$ + \beta_{CMCF} S_{CM} I_{CF} - \beta_{CMCM} S_{CM} I_{CM} - \gamma_{CM} I_{CM} - \mu_{CMI} I_{CM} $$
+
+18. $$\dot R_{CM} = - G_{JMR} R_{CM} + \gamma_{CM} I_{CM} - \delta_{CM} R_{CM} - \mu_{CMR} R_{CM} $$
+
+# Parámetros del modelo
+
+A continuación, se describen los parámetros del modelo.
+
+-   $\nu_F$ : Tasa de nacimiento de hembras.
+-   $\nu_M$ : Tasa de nacimiento de machos.
+-   $G_{AFS}$ : Tasa de paso a adultas hembras susceptibles.
+-   $G_{AMS}$ : Tasa de paso a adultos machos susceptibles.
+-   $G_{JFS}$ : Tasa de paso a juveniles hembras susceptibles.
+-   $G_{JMS}$ : Tasa de paso a juveniles machos susceptibles.
+-   $G_{AFI}$ : Tasa de paso a adultas hembras infectadas.
+-   $G_{AMI}$ : Tasa de paso a adultos machos infectados.
+-   $G_{JFI}$ : Tasa de paso a juveniles hembras infectadas.
+-   $G_{JMI}$ : Tasa de paso a juveniles machos infectados.
+-   $G_{AFR}$ : Tasa de paso a adultas hembras recuperadas.
+-   $G_{AMR}$ : Tasa de paso a adultos machos recuperados.
+-   $G_{JFR}$ : Tasa de paso a juveniles hembras recuperadas.
+-   $G_{JMR}$ : Tasa de paso a juveniles machos recuperados.
+-   $\beta_{AFAF}$ : Tasa de interacción/infección entre hembras adultas susceptibles y hembras adultas infectadas.
+-   $\beta_{AFAM}$ : Tasa de interacción/infección entre hembras adultas susceptibles y machos adultos infectados.
+-   $\beta_{AFJF}$ : Tasa de interacción/infección entre hembras adultas susceptibles y hembras juveniles infectadas.
+-   $\beta_{AFJM}$ : Tasa de interacción/infección entre hembras adultas susceptibles y machos juveniles infectados.
+-   $\beta_{AFCF}$ : Tasa de interacción/infección entre hembras adultas susceptibles y hembras crías infectadas.
+-   $\beta_{AFCM}$ : Tasa de interacción/infección entre hembras adultas susceptibles y machos crías infectados.
+-   $\beta_{AMAF}$ : Tasa de interacción/infección entre machos adultos susceptibles y hembras adultas infectadas.
+-   $\beta_{AMAM}$ : Tasa de interacción/infección entre machos adultos susceptibles y machos adultos infectados.
+-   $\beta_{AMJF}$ : Tasa de interacción/infección entre machos adultos susceptibles y hembras juveniles infectadas.
+-   $\beta_{AMJM}$ : Tasa de interacción/infección entre machos adultos susceptibles y machos juveniles infectados.
+-   $\beta_{AMCF}$ : Tasa de interacción/infección entre machos adultos susceptibles y hembras crías infectadas.
+-   $\beta_{AMCM}$ : Tasa de interacción/infección entre machos adultos susceptibles y machos crías infectados.
+-   $\beta_{JFAF}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y hembras adultas infectadas.
+-   $\beta_{JFAM}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y machos adultos infectados.
+-   $\beta_{JFJF}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y hembras juveniles infectadas.
+-   $\beta_{JFJM}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y machos juveniles infectados.
+-   $\beta_{JFCF}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y hembras crías infectadas.
+-   $\beta_{JFCM}$ : Tasa de interacción/infección entre hembras juveniles susceptibles y machos crías infectados.
+-   $\beta_{JMAF}$ : Tasa de interacción/infección entre machos juveniles susceptibles y hembras adultas infectadas.
+-   $\beta_{JMAM}$ : Tasa de interacción/infección entre machos juveniles susceptibles y machos adultos infectados.
+-   $\beta_{JMJF}$ : Tasa de interacción/infección entre machos juveniles susceptibles y hembras juveniles infectadas.
+-   $\beta_{JMJM}$ : Tasa de interacción/infección entre machos juveniles susceptibles y machos juveniles infectados.
+-   $\beta_{JMCF}$ : Tasa de interacción/infección entre machos juveniles susceptibles y hembras crías infectadas.
+-   $\beta_{JMCM}$ : Tasa de interacción/infección entre machos juveniles susceptibles y machos crías infectados.
+-   $\beta_{CFAF}$ : Tasa de interacción/infección entre hembras crías susceptibles y hembras adultas infectadas.
+-   $\beta_{CFAM}$ : Tasa de interacción/infección entre hembras crías susceptibles y machos adultos infectados.
+-   $\beta_{CFJF}$ : Tasa de interacción/infección entre hembras crías susceptibles y hembras juveniles infectadas.
+-   $\beta_{CFJM}$ : Tasa de interacción/infección entre hembras crías susceptibles y machos juveniles infectados.
+-   $\beta_{CFCF}$ : Tasa de interacción/infección entre hembras crías susceptibles y hembras crías infectadas.
+-   $\beta_{CFCM}$ : Tasa de interacción/infección entre hembras crías susceptibles y machos crías infectados.
+-   $\beta_{CMAF}$ : Tasa de interacción/infección entre machos crías susceptibles y hembras adultas infectadas.
+-   $\beta_{CMAM}$ : Tasa de interacción/infección entre machos crías susceptibles y machos adultos infectados.
+-   $\beta_{CMJF}$ : Tasa de interacción/infección entre machos crías susceptibles y hembras juveniles infectadas.
+-   $\beta_{CMJM}$ : Tasa de interacción/infección entre machos crías susceptibles y machos juveniles infectados.
+-   $\beta_{CMCF}$ : Tasa de interacción/infección entre machos crías susceptibles y hembras crías infectadas.
+-   $\beta_{CMCM}$ : Tasa de interacción/infección entre machos crías susceptibles y machos crías infectados.
+-   $\gamma_{AF}$ : Tasa de recuperación en hembras adultas.
+-   $\gamma_{AM}$ : Tasa de recuperación en machos adultos.
+-   $\gamma_{JF}$ : Tasa de recuperación en hembras juveniles.
+-   $\gamma_{JM}$ : Tasa de recuperación en machos juveniles.
+-   $\gamma_{CF}$ : Tasa de recuperación en hembras crías.
+-   $\gamma_{CM}$ : Tasa de recuperación en machos crías.
+-   $\delta_{AF}$ : Tasa de pérdida de inmunidad en hembras adultas.
+-   $\delta_{AM}$ : Tasa de pérdida de inmunidad en machos adultos.
+-   $\delta_{JF}$ : Tasa de pérdida de inmunidad en hembras juveniles.
+-   $\delta_{JM}$ : Tasa de pérdida de inmunidad en machos juveniles.
+-   $\delta_{CF}$ : Tasa de pérdida de inmunidad en hembras crías.
+-   $\delta_{CM}$ : Tasa de pérdida de inmunidad en machos crías.
+-   $\mu_{AFS}$ : Tasa de mortalidad en hembras adultas susceptibles.
+-   $\mu_{AFI}$ : Tasa de mortalidad en hembras adultas infectadas.
+-   $\mu_{AFR}$ : Tasa de mortalidad en hembras adultas recuperadas.
+-   $\mu_{AMS}$ : Tasa de mortalidad en machos adultos susceptibles.
+-   $\mu_{AMI}$ : Tasa de mortalidad en machos adultos infectados.
+-   $\mu_{AMR}$ : Tasa de mortalidad en machos adultos recuperados.
+-   $\mu_{JFS}$ : Tasa de mortalidad en hembras juveniles susceptibles.
+-   $\mu_{JFI}$ : Tasa de mortalidad en hembras juveniles infectadas.
+-   $\mu_{JFR}$ : Tasa de mortalidad en hembras juveniles recuperadas.
+-   $\mu_{JMS}$ : Tasa de mortalidad en machos juveniles susceptibles.
+-   $\mu_{JMI}$ : Tasa de mortalidad en machos juveniles infectados.
+-   $\mu_{JMR}$ : Tasa de mortalidad en machos juveniles recuperados.
+-   $\mu_{CFS}$ : Tasa de mortalidad en hembras crías susceptibles.
+-   $\mu_{CFI}$ : Tasa de mortalidad en hembras crías infectadas.
+-   $\mu_{CFR}$ : Tasa de mortalidad en hembras crías recuperadas.
+-   $\mu_{CMS}$ : Tasa de mortalidad en machos crías susceptibles.
+-   $\mu_{CMI}$ : Tasa de mortalidad en machos crías infectados.
+-   $\mu_{CMR}$ : Tasa de mortalidad en machos crías recuperados.

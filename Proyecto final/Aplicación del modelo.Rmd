@@ -1,0 +1,164 @@
+---
+title: "Aplicación del modelo"
+author: "Max, Rebeca, Perla y Ximena"
+date: "2023-11-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Para la aplicación del modelo, se utilizó la infección por zygomycetos Las ecuaciones y parámetros están explicadas en "Ecuaciones y parámetros" y los valores de los parámetros están explicados en "Valores de parámetros".
+
+### Población J
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=70)}
+library(knitr)
+
+library (deSolve) 
+
+MOD_Orcas_J <- function (time, state, parameters) { 
+  with (as.list (c (state, parameters)), {
+    dSAF <- GAFS * SJF - BetaAFAF * SAF * IAF - BetaAFAM * SAF * IAM - BetaAFJF * SAF * IJF - BetaAFJM * SAF * IJM - BetaAFCF * SAF * ICF - BetaAFCM * SAF * ICM + DeltaAF * RAF - MuAFS * SAF
+    dIAF <- GAFI * IJF + BetaAFAF * SAF * IAF + BetaAFAM * SAF * IAM + BetaAFJF * SAF * IJF + BetaAFJM * SAF * IJM + BetaAFCF * SAF * ICF + BetaAFCM * SAF * ICM - GammaAF * IAF - MuAFI
+    dRAF <- GAFR * RJF + GammaAF * IAF - DeltaAF * RAF - MuAFR * RAF
+    dSAM <- GAMS * SJM - BetaAMAF * SAM * IAF - BetaAMAM * SAM * IAM - BetaAMJF * SAM * IJF - BetaAMJM * SAM * IJM - BetaAMCF * SAM * ICF - BetaAMCM * SAM * ICM + DeltaAM * RAM - MuAMS * SAM
+    dIAM <- GAMI * IJM + BetaAMAF * SAM * IAF + BetaAMAM * SAM * IAM + BetaAMJF * SAM * IJF + BetaAMJM * SAM * IJM + BetaAMCF * SAM * ICF + BetaAMCM * SAM * ICM - GammaAM * IAM - MuAMI * IAM
+    dRAM <- GAMR * RJM + GammaAM * IAM - DeltaAM * RAM - MuAMR * RAM
+    dSJF <- GJFS * SCF - GAFS * SJF - BetaJFAF * SJF * IAF - BetaJFAM * SJF * IAM - BetaJFJF * SJF * IJF - BetaJFJM * SJF * IJM - BetaJFCF * SJF * ICF - BetaJFCM * SJF * ICM + DeltaJF * RJF - MuJFS * SJF
+    dIJF <- GJFI * ICF - GAFI * IJF + BetaJFAF * SJF * IAF + BetaJFAM * SJF * IAM + BetaJFJF * SJF * IJF + BetaJFJM * SJF * IJM + BetaJFCF * SJF * ICF + BetaJFCM * SJF * ICM - GammaJF * IJF - MuJFI * IJF 
+    dRJF <- GJFR * RCF - GAFR * RJF + GammaJF * IJF - DeltaJF * RJF - MuJFR * IJF 
+    dSJM <- GJMS * SCM - GAMS * SJM - BetaJMAF * SJM * IAF - BetaJMAM * SJM * IAM - BetaJMJF * SJM * IJF - BetaJMJM * SJM * IJM - BetaJMCF * SJM * ICF - BetaJMCM * SJM * ICM + DeltaJM * RJM - MuJMS * SJM 
+    dIJM <- GJMI * SCM - GAMI * IJM + BetaJMAF * SJM * IAF + BetaJMAM * SJM * IAM + BetaJMJF * SJM * IJF + BetaJMJM * SJM * IJM + BetaJMCF * SJM * ICF + BetaJMCM * SJM * ICM - GammaJM * IJM - DeltaJM * RJM - MuJMI * RJM
+    dRJM <- GJMR * RCM - GAMR * RJM + GammaJM * IJM - DeltaJM * RJM - MuJMR * RJM 
+    dSCF <- NuF - GJFS * SCF - BetaCFAF * SCF * IAF - BetaCFAM * SCF * IAM - BetaCFJF * SCF * IJF - BetaCFJM * SCF * IJM - BetaCFCF * SCF * ICF - BetaCFCM * SCF * ICM + DeltaCF * RCF - MuCFS * SCF
+    dICF <- - GJFI * ICF + BetaCFAF * SCF * IAF + BetaCFAM * SCF * IAM + BetaCFJF * SCF * IJF + BetaCFJM * SCF * IJM + BetaCFCF * SCF * ICF + BetaCFCM * SCF * ICM - GammaCF * ICF - MuCFI * ICF
+    dRCF <- - GJFR * RCF + GammaCF * ICF - DeltaCF * RCF - MuCFR * RCF
+    dSCM <- NuM - GJMS * SCM - BetaCMAF * SCM * IAF - BetaCMAM * SCM * IAM - BetaCMJF * SCM * IJF - BetaCMJM * SCM * IJM - BetaCMCF * SCM * ICF - BetaCMCM * SCM * ICM + DeltaCM * RCM - MuCMS * SCM
+    dICM <- - GJMI * ICM + BetaCMAF * SCM * IAF + BetaCMAM * SCM * IAM + BetaCMJF * SCM * IJF + BetaCMJM * SCM * IJM + BetaCMCF * SCM * ICF + BetaCMCM * SCM * ICM - GammaCM * ICM - MuCMI * ICM
+    dRCM <- - GJMR * RCM + GammaCM * ICM - MuCMI * ICM
+    list (c (dSAF, dIAF, dRAF, dSAM, dIAM, dRAM, dSJF, dIJF, dRJF, dSJM, dIJM, dRJM, dSCF, dICF, dRCF, dSCM, dICM, dRCM)) 
+  })
+}
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 7, IAF = 1, RAF = 0, SAM = 4, IAM = 1, RAM = 0, SJF = 3, IJF = 1, RJF = 0, SJM = 3, IJM = 1, RJM = 0, SCF = 2, ICF = 1, RCF = 0, SCM = 0, ICM = 1, RCM = 0) 
+time <- seq (0, 100, by = 0.001)
+out_J <- ode (initial_conditions, time, MOD_Orcas_J, parameters) 
+
+matplot (out_J [ , 1], out_J [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN J (0-100)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 7, IAF = 1, RAF = 0, SAM = 4, IAM = 1, RAM = 0, SJF = 3, IJF = 1, RJF = 0, SJM = 3, IJM = 1, RJM = 0, SCF = 2, ICF = 1, RCF = 0, SCM = 0, ICM = 1, RCM = 0) 
+time <- seq (0, 20, by = 0.001)
+out_J <- ode (initial_conditions, time, MOD_Orcas_J, parameters) 
+
+matplot (out_J [ , 1], out_J [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN J (0-20)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+```
+
+
+
+### Población K
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=70)}
+library(knitr)
+
+library (deSolve) 
+
+MOD_Orcas_K <- function (time, state, parameters) { 
+  with (as.list (c (state, parameters)), {
+    dSAF <- GAFS * SJF - BetaAFAF * SAF * IAF - BetaAFAM * SAF * IAM - BetaAFJF * SAF * IJF - BetaAFJM * SAF * IJM - BetaAFCF * SAF * ICF - BetaAFCM * SAF * ICM + DeltaAF * RAF - MuAFS * SAF
+    dIAF <- GAFI * IJF + BetaAFAF * SAF * IAF + BetaAFAM * SAF * IAM + BetaAFJF * SAF * IJF + BetaAFJM * SAF * IJM + BetaAFCF * SAF * ICF + BetaAFCM * SAF * ICM - GammaAF * IAF - MuAFI
+    dRAF <- GAFR * RJF + GammaAF * IAF - DeltaAF * RAF - MuAFR * RAF
+    dSAM <- GAMS * SJM - BetaAMAF * SAM * IAF - BetaAMAM * SAM * IAM - BetaAMJF * SAM * IJF - BetaAMJM * SAM * IJM - BetaAMCF * SAM * ICF - BetaAMCM * SAM * ICM + DeltaAM * RAM - MuAMS * SAM
+    dIAM <- GAMI * IJM + BetaAMAF * SAM * IAF + BetaAMAM * SAM * IAM + BetaAMJF * SAM * IJF + BetaAMJM * SAM * IJM + BetaAMCF * SAM * ICF + BetaAMCM * SAM * ICM - GammaAM * IAM - MuAMI * IAM
+    dRAM <- GAMR * RJM + GammaAM * IAM - DeltaAM * RAM - MuAMR * RAM
+    dSJF <- GJFS * SCF - GAFS * SJF - BetaJFAF * SJF * IAF - BetaJFAM * SJF * IAM - BetaJFJF * SJF * IJF - BetaJFJM * SJF * IJM - BetaJFCF * SJF * ICF - BetaJFCM * SJF * ICM + DeltaJF * RJF - MuJFS * SJF
+    dIJF <- GJFI * ICF - GAFI * IJF + BetaJFAF * SJF * IAF + BetaJFAM * SJF * IAM + BetaJFJF * SJF * IJF + BetaJFJM * SJF * IJM + BetaJFCF * SJF * ICF + BetaJFCM * SJF * ICM - GammaJF * IJF - MuJFI * IJF 
+    dRJF <- GJFR * RCF - GAFR * RJF + GammaJF * IJF - DeltaJF * RJF - MuJFR * IJF 
+    dSJM <- GJMS * SCM - GAMS * SJM - BetaJMAF * SJM * IAF - BetaJMAM * SJM * IAM - BetaJMJF * SJM * IJF - BetaJMJM * SJM * IJM - BetaJMCF * SJM * ICF - BetaJMCM * SJM * ICM + DeltaJM * RJM - MuJMS * SJM 
+    dIJM <- GJMI * SCM - GAMI * IJM + BetaJMAF * SJM * IAF + BetaJMAM * SJM * IAM + BetaJMJF * SJM * IJF + BetaJMJM * SJM * IJM + BetaJMCF * SJM * ICF + BetaJMCM * SJM * ICM - GammaJM * IJM - DeltaJM * RJM - MuJMI * RJM
+    dRJM <- GJMR * RCM - GAMR * RJM + GammaJM * IJM - DeltaJM * RJM - MuJMR * RJM 
+    dSCF <- NuF - GJFS * SCF - BetaCFAF * SCF * IAF - BetaCFAM * SCF * IAM - BetaCFJF * SCF * IJF - BetaCFJM * SCF * IJM - BetaCFCF * SCF * ICF - BetaCFCM * SCF * ICM + DeltaCF * RCF - MuCFS * SCF
+    dICF <- - GJFI * ICF + BetaCFAF * SCF * IAF + BetaCFAM * SCF * IAM + BetaCFJF * SCF * IJF + BetaCFJM * SCF * IJM + BetaCFCF * SCF * ICF + BetaCFCM * SCF * ICM - GammaCF * ICF - MuCFI * ICF
+    dRCF <- - GJFR * RCF + GammaCF * ICF - DeltaCF * RCF - MuCFR * RCF
+    dSCM <- NuM - GJMS * SCM - BetaCMAF * SCM * IAF - BetaCMAM * SCM * IAM - BetaCMJF * SCM * IJF - BetaCMJM * SCM * IJM - BetaCMCF * SCM * ICF - BetaCMCM * SCM * ICM + DeltaCM * RCM - MuCMS * SCM
+    dICM <- - GJMI * ICM + BetaCMAF * SCM * IAF + BetaCMAM * SCM * IAM + BetaCMJF * SCM * IJF + BetaCMJM * SCM * IJM + BetaCMCF * SCM * ICF + BetaCMCM * SCM * ICM - GammaCM * ICM - MuCMI * ICM
+    dRCM <- - GJMR * RCM + GammaCM * ICM - MuCMI * ICM
+    list (c (dSAF, dIAF, dRAF, dSAM, dIAM, dRAM, dSJF, dIJF, dRJF, dSJM, dIJM, dRJM, dSCF, dICF, dRCF, dSCM, dICM, dRCM)) 
+  })
+}
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 6, IAF = 1, RAF = 0, SAM = 5, IAM = 1, RAM = 0, SJF = 1, IJF = 1, RJF = 0, SJM = 0, IJM = 0, RJM = 0, SCF = 0, ICF = 1, RCF = 0, SCM = 0, ICM = 0, RCM = 0) 
+time <- seq (0, 100, by = 0.001)
+out_K <- ode (initial_conditions, time, MOD_Orcas_K, parameters) 
+
+matplot (out_K [ , 1], out_K [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN K (0-100)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 7, IAF = 1, RAF = 0, SAM = 4, IAM = 1, RAM = 0, SJF = 3, IJF = 1, RJF = 0, SJM = 3, IJM = 1, RJM = 0, SCF = 2, ICF = 1, RCF = 0, SCM = 0, ICM = 1, RCM = 0) 
+time <- seq (0, 20, by = 0.001)
+out_K <- ode (initial_conditions, time, MOD_Orcas_K, parameters) 
+
+matplot (out_K [ , 1], out_K [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN K (0-20)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+```
+
+### Población L
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=70)}
+library(knitr)
+
+library (deSolve) 
+
+MOD_Orcas_L <- function (time, state, parameters) { 
+  with (as.list (c (state, parameters)), {
+    dSAF <- GAFS * SJF - BetaAFAF * SAF * IAF - BetaAFAM * SAF * IAM - BetaAFJF * SAF * IJF - BetaAFJM * SAF * IJM - BetaAFCF * SAF * ICF - BetaAFCM * SAF * ICM + DeltaAF * RAF - MuAFS * SAF
+    dIAF <- GAFI * IJF + BetaAFAF * SAF * IAF + BetaAFAM * SAF * IAM + BetaAFJF * SAF * IJF + BetaAFJM * SAF * IJM + BetaAFCF * SAF * ICF + BetaAFCM * SAF * ICM - GammaAF * IAF - MuAFI
+    dRAF <- GAFR * RJF + GammaAF * IAF - DeltaAF * RAF - MuAFR * RAF
+    dSAM <- GAMS * SJM - BetaAMAF * SAM * IAF - BetaAMAM * SAM * IAM - BetaAMJF * SAM * IJF - BetaAMJM * SAM * IJM - BetaAMCF * SAM * ICF - BetaAMCM * SAM * ICM + DeltaAM * RAM - MuAMS * SAM
+    dIAM <- GAMI * IJM + BetaAMAF * SAM * IAF + BetaAMAM * SAM * IAM + BetaAMJF * SAM * IJF + BetaAMJM * SAM * IJM + BetaAMCF * SAM * ICF + BetaAMCM * SAM * ICM - GammaAM * IAM - MuAMI * IAM
+    dRAM <- GAMR * RJM + GammaAM * IAM - DeltaAM * RAM - MuAMR * RAM
+    dSJF <- GJFS * SCF - GAFS * SJF - BetaJFAF * SJF * IAF - BetaJFAM * SJF * IAM - BetaJFJF * SJF * IJF - BetaJFJM * SJF * IJM - BetaJFCF * SJF * ICF - BetaJFCM * SJF * ICM + DeltaJF * RJF - MuJFS * SJF
+    dIJF <- GJFI * ICF - GAFI * IJF + BetaJFAF * SJF * IAF + BetaJFAM * SJF * IAM + BetaJFJF * SJF * IJF + BetaJFJM * SJF * IJM + BetaJFCF * SJF * ICF + BetaJFCM * SJF * ICM - GammaJF * IJF - MuJFI * IJF 
+    dRJF <- GJFR * RCF - GAFR * RJF + GammaJF * IJF - DeltaJF * RJF - MuJFR * IJF 
+    dSJM <- GJMS * SCM - GAMS * SJM - BetaJMAF * SJM * IAF - BetaJMAM * SJM * IAM - BetaJMJF * SJM * IJF - BetaJMJM * SJM * IJM - BetaJMCF * SJM * ICF - BetaJMCM * SJM * ICM + DeltaJM * RJM - MuJMS * SJM 
+    dIJM <- GJMI * SCM - GAMI * IJM + BetaJMAF * SJM * IAF + BetaJMAM * SJM * IAM + BetaJMJF * SJM * IJF + BetaJMJM * SJM * IJM + BetaJMCF * SJM * ICF + BetaJMCM * SJM * ICM - GammaJM * IJM - DeltaJM * RJM - MuJMI * RJM
+    dRJM <- GJMR * RCM - GAMR * RJM + GammaJM * IJM - DeltaJM * RJM - MuJMR * RJM 
+    dSCF <- NuF - GJFS * SCF - BetaCFAF * SCF * IAF - BetaCFAM * SCF * IAM - BetaCFJF * SCF * IJF - BetaCFJM * SCF * IJM - BetaCFCF * SCF * ICF - BetaCFCM * SCF * ICM + DeltaCF * RCF - MuCFS * SCF
+    dICF <- - GJFI * ICF + BetaCFAF * SCF * IAF + BetaCFAM * SCF * IAM + BetaCFJF * SCF * IJF + BetaCFJM * SCF * IJM + BetaCFCF * SCF * ICF + BetaCFCM * SCF * ICM - GammaCF * ICF - MuCFI * ICF
+    dRCF <- - GJFR * RCF + GammaCF * ICF - DeltaCF * RCF - MuCFR * RCF
+    dSCM <- NuM - GJMS * SCM - BetaCMAF * SCM * IAF - BetaCMAM * SCM * IAM - BetaCMJF * SCM * IJF - BetaCMJM * SCM * IJM - BetaCMCF * SCM * ICF - BetaCMCM * SCM * ICM + DeltaCM * RCM - MuCMS * SCM
+    dICM <- - GJMI * ICM + BetaCMAF * SCM * IAF + BetaCMAM * SCM * IAM + BetaCMJF * SCM * IJF + BetaCMJM * SCM * IJM + BetaCMCF * SCM * ICF + BetaCMCM * SCM * ICM - GammaCM * ICM - MuCMI * ICM
+    dRCM <- - GJMR * RCM + GammaCM * ICM - MuCMI * ICM
+    list (c (dSAF, dIAF, dRAF, dSAM, dIAM, dRAM, dSJF, dIJF, dRJF, dSJM, dIJM, dRJM, dSCF, dICF, dRCF, dSCM, dICM, dRCM)) 
+  })
+}
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 19, IAF = 1, RAF = 0, SAM = 10, IAM = 1, RAM = 0, SJF = 4, IJF = 1, RJF = 0, SJM = 8, IJM = 1, RJM = 0, SCF = 3, ICF = 1, RCF = 0, SCM = 1, ICM = 1, RCM = 0) 
+time <- seq (0, 100, by = 0.001)
+out_L <- ode (initial_conditions, time, MOD_Orcas_L, parameters) 
+
+matplot (out_L [ , 1], out_L [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN L (0-100)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+
+parameters <- c (NuF = 0.000109589, NuM = 0.0001369863, GAFS = 0.0002107482, GAFI = 0.00006322335, GAFR = 0.0001264489, GAMS = 0.0002107482, GAMI = 0.00006322445, GAMR = 0.0001264489, GJFS = 0.001826484, GJFI = 0.0005479452, GJFR = 0.00109589, GJMS = 0.001826484, GJMI = 0.0005479452, GJMR = 0.00109589, BetaAFAF = 0.07142857, BetaAFAM = 0.04285714, BetaAFJF = 0.07142857, BetaAFJM = 0.05714286, BetaAFCF = 0.05714286, BetaAFCM = 0.05714286, BetaAMAF = 0.04285714, BetaAMAM = 0.05714286, BetaAMJF = 0.02857143, BetaAMCF = 0.02857143, BetaAMJM = 0.02857143, BetaAMCM = 0.02857143, BetaJFAF = 0.07142857, BetaJFAM = 0.02857143, BetaJFJF = 0.07142857, BetaJFJM = 0.02857143, BetaJFCF = 0.07142857, BetaJFCM = 0.07142857, BetaJMAF = 0.05714286, BetaJMAM = 0.02857143, BetaJMJF = 0.02857143, BetaJMJM = 0.05714286, BetaJMCF = 0.04285714, BetaJMCM = 0.04285714, BetaCFAF = 0.05714286, BetaCFAM = 0.02857143, BetaCFJF = 0.07142857, BetaCFJM = 0.04285714, BetaCFCF = 0.07142857, BetaCFCM = 0.07142857, BetaCMAF = 0.05714286, BetaCMAM = 0.02857143, BetaCMJF = 0.07142857, BetaCMJM = 0.04285714, BetaCMCF = 0.07142857, BetaCMCM = 0.07142857, GammaAF = 0.009756098, GammaAM = 0.008536585, GammaJF = 0.01219512, GammaJM = 0.01219512, GammaCF = 0.009756098, GammaCM = 0.009756098, DeltaAF = 0.02, DeltaAM = 0.02666667, DeltaJF = 0.01, DeltaJM = 0.01, DeltaCF = 0.02, DeltaCM = 0.02, MuAFS = 0.00001826484, MuAFI = 0.00003652968, MuAFR = 0.00002435312, MuAMS = 0.00002435312, MuAMI = 0.00004870624, MuAMR = 0.00003652968, MuJFS = 0.000005011694, MuJFI = 0.00001002339, MuJFR = 0.000009021049, MuJMS  = 0.000005011694, MuJMI = 0.00001002339, MuJMR = 0.000009021049, MuCFS = 0.000009287207, MuCFI = 0.00001857441, MuCFR = 0.00001238294, MuCMS = 0.000009287207, MuCMI = 0.00001857441, MuCMR = 0.00001238294)
+initial_conditions <- c (SAF = 19, IAF = 1, RAF = 0, SAM = 10, IAM = 1, RAM = 0, SJF = 4, IJF = 1, RJF = 0, SJM = 8, IJM = 1, RJM = 0, SCF = 3, ICF = 1, RCF = 0, SCM = 1, ICM = 1, RCM = 0)  
+time <- seq (0, 20, by = 0.001)
+out_L <- ode (initial_conditions, time, MOD_Orcas_L, parameters) 
+
+matplot (out_L [ , 1], out_L [ , 2 : 19], type = "l", xlab = "TIEMPO", ylab = "POBLACIÓN", main = "MODELO SIRS - POBLACIÓN L (0-20)", lwd = 3, col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"))
+legend ("topright", c ("SAF", "IAF", "RAF", "SAM", "IAM", "RAM", "SJF", "IJF", "RJF", "SJM", "IJM", "RJM", "SCF", "ICF", "RCF", "SCM", "ICM", "RCM"), col = c ("antiquewhite4", "aquamarine4", "blue", "brown", "cadetblue1", "chartreuse4", "chocolate4", "cyan4", "darkgoldenrod2", "darkolivegreen2", "darkorchid4", "deeppink4", "deepskyblue4", "gold4", "hotpink", "lightblue", "lightsalmon", "magenta3"), lty = 1 : 18, cex = 0.5, bg = "white")
+
+```
+
+
